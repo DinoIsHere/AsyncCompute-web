@@ -3,6 +3,8 @@ import { computed, ref } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import SiteHeader from '../../Components/Public/SiteHeader.vue';
 import SiteFooter from '../../Components/Public/SiteFooter.vue';
+import { motion, AnimatePresence } from 'motion-v';
+import { enterProps, staggerProps } from '../../utils/motion';
 
 const props = defineProps({
     plans: {
@@ -114,7 +116,7 @@ const REGION_LABELS = {
         <main>
             <!-- Hero -->
             <section class="border-b border-hairline">
-                <div class="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20">
+                <motion.div v-bind="staggerProps(0)" class="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20">
                     <p class="text-xs font-semibold uppercase tracking-[0.3em] text-acid">
                         Instance catalogue
                     </p>
@@ -125,7 +127,7 @@ const REGION_LABELS = {
                         Live availability across all regions. Filter by VRAM, GPU count, or
                         location — then deploy from the dashboard, API, or CLI.
                     </p>
-                </div>
+                </motion.div>
             </section>
 
             <!-- Filters -->
@@ -197,9 +199,11 @@ const REGION_LABELS = {
                 </p>
 
                 <div class="mt-4 space-y-4">
-                    <article
+                    <AnimatePresence>
+                    <motion.article
                         v-for="plan in filteredPlans"
                         :key="plan.id"
+                        v-bind="enterProps()"
                         class="overflow-hidden rounded-xl border border-hairline bg-panel transition hover:border-zinc-600"
                     >
                         <div class="grid gap-6 p-6 lg:grid-cols-[2fr_3fr]">
@@ -283,11 +287,13 @@ const REGION_LABELS = {
                                 </div>
                             </div>
                         </div>
-                    </article>
+                    </motion.article>
+                    </AnimatePresence>
 
                     <!-- Empty state -->
-                    <div
+                    <motion.div
                         v-if="filteredPlans.length === 0"
+                        v-bind="enterProps()"
                         class="rounded-xl border border-hairline bg-panel px-6 py-20 text-center"
                     >
                         <p class="text-sm font-medium text-zinc-300">No plans match your filters.</p>
@@ -301,7 +307,7 @@ const REGION_LABELS = {
                         >
                             Reset filters
                         </button>
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 

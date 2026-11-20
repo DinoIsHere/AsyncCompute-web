@@ -2,6 +2,8 @@
 import { computed, ref } from 'vue';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import SiteHeader from '../../Components/Public/SiteHeader.vue';
+import { motion, AnimatePresence } from 'motion-v';
+import { enterProps, hoverProps, staggerProps } from '../../utils/motion';
 import SiteFooter from '../../Components/Public/SiteFooter.vue';
 
 const props = defineProps({
@@ -131,9 +133,9 @@ const ESTIMATES = [
             <p class="text-xs font-semibold uppercase tracking-[0.3em] text-acid">
                 Deploy
             </p>
-            <h1 class="mt-3 text-3xl font-semibold tracking-tight text-zinc-50 sm:text-4xl">
+            <motion.h1 v-bind="enterProps()" class="mt-3 text-3xl font-semibold tracking-tight text-zinc-50 sm:text-4xl">
                 Launch a GPU instance
-            </h1>
+            </motion.h1>
             <p class="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-400">
                 Pick a accelerator, choose a configuration and region, and go live in minutes.
                 Billed per second while the instance runs.
@@ -175,9 +177,10 @@ const ESTIMATES = [
             <!-- STEP 1: choose GPU -->
             <section v-if="step === 1" class="mt-8">
                 <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    <button
-                        v-for="plan in plans"
+                    <motion.button
+                        v-for="(plan, i) in plans"
                         :key="plan.id"
+                        v-bind="staggerProps(i)"
                         type="button"
                         class="rounded-xl border border-hairline bg-panel p-6 text-left transition hover:border-acid/60"
                         :class="{ 'border-acid': selectedPlanId === plan.id }"
@@ -207,13 +210,13 @@ const ESTIMATES = [
                         <p class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-acid">
                             Select →
                         </p>
-                    </button>
+                    </motion.button>
                 </div>
             </section>
 
             <!-- STEP 2: configure -->
             <section v-else-if="step === 2 && selectedPlan" class="mt-8 grid gap-6 lg:grid-cols-[3fr_2fr]">
-                <div class="rounded-xl border border-hairline bg-panel p-6">
+                <motion.div v-bind="enterProps()" class="rounded-xl border border-hairline bg-panel p-6">
                     <div class="flex items-center justify-between">
                         <h2 class="text-sm font-semibold text-zinc-100">
                             Configuration — <span class="text-acid">{{ selectedPlan.name }}</span>
@@ -249,9 +252,10 @@ const ESTIMATES = [
                     <!-- Region -->
                     <p class="mt-6 text-xs font-medium uppercase tracking-widest text-zinc-500">Region</p>
                     <div class="mt-2 space-y-2">
-                        <button
-                            v-for="offering in selectedOfferings"
+                        <motion.button
+                            v-for="(offering, i) in selectedOfferings"
                             :key="offering.id"
+                            v-bind="staggerProps(i, { duration: 0.15 })"
                             type="button"
                             :disabled="offering.stock < 1"
                             class="flex w-full items-center justify-between rounded-lg border px-4 py-3 text-left transition disabled:cursor-not-allowed disabled:opacity-50"
@@ -272,7 +276,7 @@ const ESTIMATES = [
                                 <span class="block text-sm font-semibold text-zinc-100">${{ offering.hourly.toFixed(2) }}/hr</span>
                                 <span class="text-[11px] text-zinc-500">${{ offering.daily.toFixed(2) }}/day</span>
                             </span>
-                        </button>
+                        </motion.button>
                         <p v-if="selectedOfferings.length === 0" class="rounded-lg border border-hairline bg-canvas px-4 py-6 text-center text-xs text-zinc-500">
                             No {{ selectedCount }}× GPU configurations for this model. Try another count.
                         </p>
@@ -321,10 +325,10 @@ const ESTIMATES = [
                     >
                         Review & launch →
                     </button>
-                </div>
+                </motion.div>
 
                 <!-- Live cost summary -->
-                <aside class="h-fit rounded-xl border border-hairline bg-panel p-6 lg:sticky lg:top-24">
+                <motion.aside v-bind="enterProps({ delay: 0.1 })" class="h-fit rounded-xl border border-hairline bg-panel p-6 lg:sticky lg:top-24">
                     <h2 class="text-sm font-semibold text-zinc-100">Cost estimate</h2>
                     <template v-if="selectedOffering">
                         <div class="mt-4 space-y-3 text-sm">
@@ -350,12 +354,12 @@ const ESTIMATES = [
                     <p v-else class="mt-4 text-xs text-zinc-500">
                         Select a GPU count and region to see pricing.
                     </p>
-                </aside>
+                </motion.aside>
             </section>
 
             <!-- STEP 3: review -->
             <section v-else-if="step === 3 && selectedPlan && selectedOffering" class="mt-8 max-w-2xl">
-                <div class="rounded-xl border border-hairline bg-panel p-6 sm:p-8">
+                <motion.div v-bind="enterProps()" class="rounded-xl border border-hairline bg-panel p-6 sm:p-8">
                     <h2 class="text-lg font-semibold text-zinc-50">Review your launch</h2>
                     <dl class="mt-6 divide-y divide-hairline text-sm">
                         <div class="flex justify-between py-3">
@@ -405,14 +409,14 @@ const ESTIMATES = [
                             ← Back
                         </button>
                     </div>
-                </div>
+                </motion.div>
                 <p class="mt-4 text-xs text-zinc-600">
                     By launching you agree to the Asyncindo terms. Per-second billing starts when the instance is running.
                 </p>
             </section>
 
             <!-- My instances -->
-            <section v-if="myInstances.length" class="mt-16">
+            <motion.section v-bind="enterProps({ delay: 0.1 })" v-if="myInstances.length" class="mt-16">
                 <h2 class="text-lg font-semibold text-zinc-50">Your instances</h2>
                 <div class="mt-4 overflow-hidden rounded-xl border border-hairline bg-panel">
                     <div class="overflow-x-auto">
@@ -429,7 +433,11 @@ const ESTIMATES = [
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-hairline text-zinc-300">
-                                <tr v-for="instance in myInstances" :key="instance.id">
+                                <motion.tr
+                                    v-for="(instance, i) in myInstances"
+                                    :key="instance.id"
+                                    v-bind="staggerProps(i)"
+                                >
                                     <td class="px-5 py-3.5 font-mono text-[13px]">{{ instance.name }}</td>
                                     <td class="px-4 py-3.5">{{ instance.model }} ×{{ instance.gpu_count }}</td>
                                     <td class="px-4 py-3.5 font-mono text-xs">{{ instance.region }}</td>
@@ -461,12 +469,12 @@ const ESTIMATES = [
                                             Terminate
                                         </button>
                                     </td>
-                                </tr>
+                                </motion.tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </section>
+            </motion.section>
         </main>
 
         <SiteFooter />
