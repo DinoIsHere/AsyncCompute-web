@@ -103,7 +103,8 @@ function donutSegments() {
 
     <AdminLayout>
         <!-- Header -->
-        <div class="flex flex-wrap items-end justify-between gap-4">
+        <motion.div v-bind="staggerProps(0)">
+            <div class="flex flex-wrap items-end justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-semibold text-zinc-100">Dashboard</h1>
                 <p class="mt-1 text-sm text-zinc-500">
@@ -116,19 +117,23 @@ function donutSegments() {
             >
                 Manage catalogue
             </Link>
-        </div>
+            </div>
+        </motion.div>
 
         <!-- KPI stats -->
         <div class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <div
-                v-for="stat in stats"
+            <motion.div
+                v-for="(stat, i) in stats"
                 :key="stat.label"
+                v-bind="staggerProps(i + 1)"
                 class="rounded-lg border border-hairline bg-panel p-5"
             >
                 <p class="text-xs font-medium uppercase tracking-widest text-zinc-500">
                     {{ stat.label }}
                 </p>
-                <p class="mt-3 text-3xl font-semibold text-zinc-50">{{ stat.value }}</p>
+                <p class="mt-3 text-3xl font-semibold text-zinc-50">
+                    <CountUp :value="stat.value" />
+                </p>
                 <p class="mt-2 text-xs text-zinc-500">
                     <span
                         v-if="stat.delta !== null"
@@ -139,13 +144,13 @@ function donutSegments() {
                     </span>
                     {{ stat.deltaLabel }}
                 </p>
-            </div>
+            </motion.div>
         </div>
 
         <!-- Charts row -->
         <div class="mt-6 grid gap-4 lg:grid-cols-3">
             <!-- Revenue chart -->
-            <div class="rounded-lg border border-hairline bg-panel p-5 lg:col-span-2">
+            <motion.div v-bind="staggerProps(5)" class="rounded-lg border border-hairline bg-panel p-5 lg:col-span-2">
                 <div class="flex items-baseline justify-between">
                     <h2 class="text-sm font-semibold text-zinc-100">Revenue — last 30 days</h2>
                     <p class="text-xs text-zinc-500">
@@ -179,10 +184,10 @@ function donutSegments() {
                     <span>{{ revenueSeries[Math.floor(revenueSeries.length / 2)]?.date }}</span>
                     <span>{{ revenueSeries[revenueSeries.length - 1]?.date }}</span>
                 </div>
-            </div>
+            </motion.div>
 
             <!-- Jobs by type donut -->
-            <div class="rounded-lg border border-hairline bg-panel p-5">
+            <motion.div v-bind="staggerProps(6)" class="rounded-lg border border-hairline bg-panel p-5">
                 <h2 class="text-sm font-semibold text-zinc-100">Jobs by type</h2>
                 <div class="mt-4 flex items-center gap-6">
                     <svg viewBox="0 0 140 140" class="h-32 w-32 shrink-0 -rotate-90">
@@ -214,13 +219,13 @@ function donutSegments() {
                         </li>
                     </ul>
                 </div>
-            </div>
+            </motion.div>
         </div>
 
         <!-- Fleet + region demand -->
         <div class="mt-6 grid gap-4 lg:grid-cols-3">
             <!-- Hardware nodes -->
-            <div class="rounded-lg border border-hairline bg-panel p-5 lg:col-span-2">
+            <motion.div v-bind="staggerProps(7)" class="rounded-lg border border-hairline bg-panel p-5 lg:col-span-2">
                 <div class="flex items-baseline justify-between">
                     <h2 class="text-sm font-semibold text-zinc-100">Hardware — live nodes</h2>
                     <p class="text-xs text-zinc-500">
@@ -235,7 +240,9 @@ function donutSegments() {
                             <tr class="border-b border-hairline">
                                 <th class="pb-2 pr-3 font-medium">Node</th>
                                 <th class="pb-2 pr-3 font-medium">Model</th>
-                                <th class="pb-2 pr-3 font-medium">Status</th>
+                                <th class="pb-2 pr-3 font-medium">
+                                    <LiveDot /> Status
+                                </th>
                                 <th class="pb-2 pr-3 font-medium">GPU</th>
                                 <th class="pb-2 pr-3 font-medium">Temp</th>
                                 <th class="pb-2 pr-3 font-medium">Power</th>
@@ -243,7 +250,12 @@ function donutSegments() {
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-hairline text-zinc-300">
-                            <tr v-for="node in nodes" :key="node.id">
+                            <motion.tr
+                                v-for="(node, i) in nodes"
+                                :key="node.id"
+                                v-bind="staggerProps(i)"
+                                class="transition-colors hover:bg-canvas/40"
+                            >
                                 <td class="py-2.5 pr-3 font-mono">{{ node.hostname }}</td>
                                 <td class="py-2.5 pr-3">{{ node.model }}</td>
                                 <td class="py-2.5 pr-3">
@@ -262,26 +274,28 @@ function donutSegments() {
                                 <td class="py-2.5">
                                     <div class="flex items-center gap-2">
                                         <div class="h-1.5 w-24 overflow-hidden rounded-full bg-canvas">
-                                            <div
+                                            <motion.div
                                                 class="h-full rounded-full"
                                                 :class="utilColor(node.gpu_util)"
-                                                :style="{ width: node.gpu_util + '%' }"
-                                            ></div>
+                                                :initial="{ width: 0 }"
+                                                :animate="{ width: node.gpu_util + '%' }"
+                                                :transition="{ duration: 0.6, ease: 'easeOut', delay: 0.1 + i * 0.05 }"
+                                            ></motion.div>
                                         </div>
                                         <span class="tabular-nums text-zinc-500">{{ node.gpu_util }}%</span>
                                     </div>
                                 </td>
-                            </tr>
+                            </motion.tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </motion.div>
 
             <!-- Region demand bars -->
-            <div class="rounded-lg border border-hairline bg-panel p-5">
+            <motion.div v-bind="staggerProps(8)" class="rounded-lg border border-hairline bg-panel p-5">
                 <h2 class="text-sm font-semibold text-zinc-100">Utilization by region</h2>
                 <div class="mt-5 space-y-5">
-                    <div v-for="region in regionDemand" :key="region.region">
+                    <div v-for="(region, i) in regionDemand" :key="region.region">
                         <div class="flex justify-between text-xs">
                             <span class="font-mono text-zinc-300">{{ region.region }}</span>
                             <span class="text-zinc-500">
@@ -289,24 +303,27 @@ function donutSegments() {
                             </span>
                         </div>
                         <div class="mt-2 h-2 overflow-hidden rounded-full bg-canvas">
-                            <div
-                                class="h-full rounded-full bg-acid transition-all"
-                                :style="{ width: region.avg_util + '%' }"
-                            ></div>
+                            <motion.div
+                                class="h-full rounded-full bg-acid"
+                                :initial="{ width: 0 }"
+                                :animate="{ width: region.avg_util + '%' }"
+                                :transition="{ duration: 0.7, ease: 'easeOut', delay: 0.1 + i * 0.1 }"
+                            ></motion.div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </div>
 
         <!-- Clusters -->
-        <div class="mt-6 rounded-lg border border-hairline bg-panel p-5">
+        <motion.div v-bind="staggerProps(9)" class="mt-6 rounded-lg border border-hairline bg-panel p-5">
             <h2 class="text-sm font-semibold text-zinc-100">Clusters</h2>
             <div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                <div
-                    v-for="cluster in clusters"
+                <motion.div
+                    v-for="(cluster, i) in clusters"
                     :key="cluster.id"
-                    class="rounded-lg border border-hairline bg-canvas p-4"
+                    v-bind="staggerProps(i)"
+                    class="rounded-lg border border-hairline bg-canvas p-4 transition-colors hover:border-zinc-600"
                 >
                     <div class="flex items-center justify-between gap-2">
                         <p class="font-mono text-sm text-zinc-100">{{ cluster.name }}</p>
@@ -322,23 +339,25 @@ function donutSegments() {
                         {{ cluster.gpu_total }} GPUs
                     </p>
                     <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-panel">
-                        <div
+                        <motion.div
                             class="h-full rounded-full"
                             :class="utilColor(cluster.utilization)"
-                            :style="{ width: cluster.utilization + '%' }"
-                        ></div>
+                            :initial="{ width: 0 }"
+                            :animate="{ width: cluster.utilization + '%' }"
+                            :transition="{ duration: 0.7, ease: 'easeOut', delay: 0.15 + i * 0.08 }"
+                        ></motion.div>
                     </div>
                     <p class="mt-1.5 text-right text-[10px] text-zinc-500">
                         {{ cluster.utilization }}% utilized
                     </p>
-                </div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
 
         <!-- Customers + recent jobs -->
         <div class="mt-6 grid gap-4 lg:grid-cols-2">
             <!-- Top customers -->
-            <div class="rounded-lg border border-hairline bg-panel p-5">
+            <motion.div v-bind="staggerProps(10)" class="rounded-lg border border-hairline bg-panel p-5">
                 <h2 class="text-sm font-semibold text-zinc-100">Top customers</h2>
                 <table class="mt-4 w-full text-left text-xs">
                     <thead class="text-[10px] uppercase tracking-widest text-zinc-500">
@@ -350,7 +369,11 @@ function donutSegments() {
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-hairline text-zinc-300">
-                        <tr v-for="customer in topCustomers" :key="customer.id">
+                        <motion.tr
+                            v-for="(customer, i) in topCustomers"
+                            :key="customer.id"
+                            v-bind="staggerProps(i)"
+                        >
                             <td class="py-2.5 pr-3">
                                 {{ customer.company }}
                                 <span class="block text-[10px] text-zinc-600">{{ customer.country }}</span>
@@ -364,7 +387,7 @@ function donutSegments() {
                             <td class="py-2.5 tabular-nums text-zinc-500">
                                 ${{ Number(customer.balance).toLocaleString() }}
                             </td>
-                        </tr>
+                        </motion.tr>
                     </tbody>
                 </table>
                 <p class="mt-3 text-[10px] uppercase tracking-widest text-zinc-600">
@@ -373,10 +396,10 @@ function donutSegments() {
                         {{ tier }}: {{ count }}
                     </span>
                 </p>
-            </div>
+            </motion.div>
 
             <!-- Recent jobs -->
-            <div class="rounded-lg border border-hairline bg-panel p-5">
+            <motion.div v-bind="staggerProps(11)" class="rounded-lg border border-hairline bg-panel p-5">
                 <h2 class="text-sm font-semibold text-zinc-100">Recent jobs</h2>
                 <table class="mt-4 w-full text-left text-xs">
                     <thead class="text-[10px] uppercase tracking-widest text-zinc-500">
@@ -389,7 +412,11 @@ function donutSegments() {
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-hairline text-zinc-300">
-                        <tr v-for="job in recentJobs" :key="job.id">
+                        <motion.tr
+                            v-for="(job, i) in recentJobs"
+                            :key="job.id"
+                            v-bind="staggerProps(i)"
+                        >
                             <td class="py-2.5 pr-3 font-mono text-[11px]">{{ job.name }}</td>
                             <td class="py-2.5 pr-3">{{ job.customer }}</td>
                             <td class="py-2.5 pr-3 capitalize text-zinc-400">{{ job.type }}</td>
@@ -404,10 +431,10 @@ function donutSegments() {
                             <td class="py-2.5 text-right tabular-nums">
                                 ${{ job.cost.toFixed(2) }}
                             </td>
-                        </tr>
+                        </motion.tr>
                     </tbody>
                 </table>
-            </div>
+            </motion.div>
         </div>
     </AdminLayout>
 </template>

@@ -2,6 +2,8 @@
 import { Head, Link } from '@inertiajs/vue3';
 import SiteHeader from '../../Components/Public/SiteHeader.vue';
 import SiteFooter from '../../Components/Public/SiteFooter.vue';
+import { motion } from 'motion-v';
+import { staggerProps } from '../../utils/motion';
 
 const timeline = [
     {
@@ -90,7 +92,7 @@ const team = [
                     class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(180,255,57,0.10),transparent_55%)]"
                     aria-hidden="true"
                 ></div>
-                <div class="relative mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28">
+                <motion.div v-bind="staggerProps(0)" class="relative mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28">
                     <p class="text-xs font-semibold uppercase tracking-[0.3em] text-acid">
                         About PT Asyncindo
                     </p>
@@ -103,7 +105,7 @@ const team = [
                         We started Asyncindo because training a model in Southeast Asia meant
                         sending your data somewhere else and waiting. It shouldn't.
                     </p>
-                </div>
+                </motion.div>
             </section>
 
             <!-- Story / timeline -->
@@ -117,7 +119,12 @@ const team = [
                         </p>
                     </div>
                     <ol class="relative space-y-10 border-l border-hairline pl-8">
-                        <li v-for="item in timeline" :key="item.year" class="relative">
+                        <motion.li
+                            v-for="(item, i) in timeline"
+                            :key="item.year"
+                            v-bind="staggerProps(i, { delay: 0.1 + i * 0.08 })"
+                            class="relative"
+                        >
                             <span
                                 class="absolute -left-[37px] top-1.5 h-3 w-3 rotate-45 border border-acid bg-canvas"
                                 aria-hidden="true"
@@ -131,7 +138,7 @@ const team = [
                             <p class="mt-2 max-w-2xl text-sm leading-relaxed text-zinc-500">
                                 {{ item.body }}
                             </p>
-                        </li>
+                        </motion.li>
                     </ol>
                 </div>
             </section>
@@ -141,10 +148,14 @@ const team = [
                 <div
                     class="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-5 py-12 sm:px-8 lg:grid-cols-4"
                 >
-                    <div v-for="stat in stats" :key="stat.label">
+                    <motion.div
+                        v-for="(stat, i) in stats"
+                        :key="stat.label"
+                        v-bind="staggerProps(i)"
+                    >
                         <p class="text-3xl font-semibold text-acid">{{ stat.value }}</p>
                         <p class="mt-2 text-sm text-zinc-500">{{ stat.label }}</p>
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 
@@ -152,9 +163,10 @@ const team = [
             <section class="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20">
                 <h2 class="text-2xl font-semibold text-zinc-50 sm:text-3xl">What we believe</h2>
                 <div class="mt-8 grid gap-4 md:grid-cols-3">
-                    <article
-                        v-for="value in values"
+                    <motion.article
+                        v-for="(value, i) in values"
                         :key="value.title"
+                        v-bind="staggerProps(i)"
                         class="rounded-xl border border-hairline bg-panel p-6"
                     >
                         <span class="inline-block h-3 w-3 rotate-45 bg-acid" aria-hidden="true"></span>
@@ -164,7 +176,7 @@ const team = [
                         <p class="mt-2 text-sm leading-relaxed text-zinc-500">
                             {{ value.body }}
                         </p>
-                    </article>
+                    </motion.article>
                 </div>
             </section>
 
@@ -176,9 +188,10 @@ const team = [
                         Small, senior, and hands-on. The people who build the platform also run it.
                     </p>
                     <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                        <article
-                            v-for="member in team"
+                        <motion.article
+                            v-for="(member, i) in team"
                             :key="member.name"
+                            v-bind="staggerProps(i)"
                             class="rounded-xl border border-hairline bg-panel p-6"
                         >
                             <div
@@ -196,7 +209,7 @@ const team = [
                             <p class="mt-3 text-sm leading-relaxed text-zinc-500">
                                 {{ member.bio }}
                             </p>
-                        </article>
+                        </motion.article>
                     </div>
                 </div>
             </section>
