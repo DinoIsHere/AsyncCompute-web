@@ -1,6 +1,8 @@
 <script setup>
 import { computed } from 'vue';
 import { Link, router, usePage } from '@inertiajs/vue3';
+import { motion } from 'motion-v';
+import { hoverProps } from '../utils/motion';
 
 const page = usePage();
 const userName = computed(() => page.props.auth?.user?.name ?? 'Admin');
@@ -49,26 +51,28 @@ function logout() {
 
             <div class="hidden border-t border-hairline px-5 py-4 md:block">
                 <p class="truncate text-xs text-zinc-500">{{ userName }}</p>
-                <button
+                <motion.button
                     type="button"
+                    v-bind="hoverProps()"
                     class="mt-2 text-sm font-medium text-zinc-300 transition hover:text-acid"
                     @click="logout"
                 >
                     Log out
-                </button>
+                </motion.button>
             </div>
         </aside>
 
         <div class="flex min-w-0 flex-1 flex-col">
             <header class="flex items-center justify-between border-b border-hairline px-5 py-3 md:hidden">
                 <span class="truncate text-xs text-zinc-500">{{ userName }}</span>
-                <button
+                <motion.button
                     type="button"
+                    v-bind="hoverProps()"
                     class="text-sm font-medium text-zinc-300 transition hover:text-acid"
                     @click="logout"
                 >
                     Log out
-                </button>
+                </motion.button>
             </header>
 
             <main class="flex-1 px-5 py-6 sm:px-8 sm:py-10">

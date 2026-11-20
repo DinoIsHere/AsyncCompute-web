@@ -1,6 +1,8 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import { AnimatePresence, LayoutGroup, motion } from 'motion-v';
+import { MOTION, enterProps } from '../../utils/motion';
 
 const props = defineProps({
     plans: {
@@ -46,24 +48,32 @@ function price(plan) {
                 </p>
             </div>
 
-            <div class="flex flex-wrap gap-2" role="tablist" aria-label="GPU count">
-                <button
-                    v-for="count in gpuCounts"
-                    :key="count"
-                    type="button"
-                    role="tab"
-                    :aria-selected="selectedCount === count"
-                    class="rounded-md px-4 py-2 text-sm font-semibold transition"
-                    :class="
-                        selectedCount === count
-                            ? 'bg-acid text-canvas'
-                            : 'border border-hairline bg-panel text-zinc-400 hover:border-zinc-600 hover:text-zinc-100'
-                    "
-                    @click="selectedCount = count"
-                >
-                    {{ count }}× GPU
-                </button>
-            </div>
+            <LayoutGroup>
+                <div class="flex flex-wrap gap-2" role="tablist" aria-label="GPU count">
+                    <button
+                        v-for="count in gpuCounts"
+                        :key="count"
+                        type="button"
+                        role="tab"
+                        :aria-selected="selectedCount === count"
+                        class="relative overflow-hidden rounded-md px-4 py-2 text-sm font-semibold transition"
+                        :class="
+                            selectedCount === count
+                                ? 'text-canvas'
+                                : 'border border-hairline bg-panel text-zinc-400 hover:border-zinc-600 hover:text-zinc-100'
+                        "
+                        @click="selectedCount = count"
+                    >
+                        <motion.span
+                            v-if="selectedCount === count"
+                            layoutId="gpu-count-tab"
+                            class="absolute inset-0 -z-10 rounded-md bg-acid"
+                            :transition="{ duration: MOTION.duration, ease: MOTION.ease }"
+                        />
+                        <span class="relative z-10">{{ count }}× GPU</span>
+                    </button>
+                </div>
+            </LayoutGroup>
         </div>
 
         <div class="overflow-hidden rounded-xl border border-hairline bg-panel shadow-2xl">
@@ -83,9 +93,12 @@ function price(plan) {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
+                        <AnimatePresence>
+                        <motion.tr
                             v-for="plan in filteredPlans"
                             :key="plan.id"
+                            v-bind="enterProps()"
+                            :exit="MOTION.exit"
                             class="border-b border-hairline transition last:border-b-0 hover:bg-canvas/40"
                         >
                             <th scope="row" class="sticky left-0 z-10 bg-panel px-5 py-5 text-left font-normal">
@@ -115,7 +128,8 @@ function price(plan) {
                                     Out of stock
                                 </span>
                             </td>
-                        </tr>
+                        </motion.tr>
+                        </AnimatePresence>
                         <tr v-if="filteredPlans.length === 0">
                             <td colspan="7" class="px-5 py-16 text-center">
                                 <p class="text-sm font-medium text-zinc-300">

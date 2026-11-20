@@ -1,6 +1,8 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useForm, usePage } from '@inertiajs/vue3';
+import { AnimatePresence, motion } from 'motion-v';
+import { MOTION, enterProps, hoverProps } from '../../../utils/motion';
 
 const props = defineProps({
     plan: {
@@ -219,21 +221,27 @@ function submit() {
                 <h2 class="text-sm font-semibold uppercase tracking-widest text-zinc-400">
                     Instance offerings
                 </h2>
-                <button
+                <motion.button
                     type="button"
+                    v-bind="hoverProps()"
                     class="rounded-md border border-hairline px-3 py-1.5 text-xs font-medium text-zinc-200 transition hover:border-acid hover:text-acid"
                     @click="addOffering"
                 >
                     Add offering
-                </button>
+                </motion.button>
             </div>
 
-            <p v-if="error('offerings')" class="mt-3 text-xs text-red-400">{{ error('offerings') }}</p>
+            <motion.p v-if="error('offerings')" v-bind="enterProps()" class="mt-3 text-xs text-red-400">
+                {{ error('offerings') }}
+            </motion.p>
 
             <div class="mt-4 space-y-4">
-                <div
+                <AnimatePresence>
+                <motion.div
                     v-for="(offering, index) in form.offerings"
                     :key="index"
+                    v-bind="enterProps()"
+                    :exit="MOTION.exit"
                     class="rounded-md border border-hairline bg-canvas p-4"
                 >
                     <div class="grid gap-3 sm:grid-cols-3">
@@ -297,27 +305,32 @@ function submit() {
                         </div>
                     </div>
 
-                    <button
+                    <motion.button
                         type="button"
+                        v-bind="hoverProps()"
                         class="mt-3 text-xs text-zinc-500 transition hover:text-red-400 disabled:opacity-40"
                         :disabled="form.offerings.length === 1"
                         @click="removeOffering(index)"
                     >
                         Remove
-                    </button>
-                </div>
+                    </motion.button>
+                </motion.div>
+                </AnimatePresence>
             </div>
         </section>
 
         <div class="flex items-center justify-end gap-4 lg:col-span-2">
-            <p v-if="form.hasErrors" class="text-xs text-red-400">Fix the highlighted fields.</p>
-            <button
+            <motion.p v-if="form.hasErrors" v-bind="enterProps()" class="text-xs text-red-400">
+                Fix the highlighted fields.
+            </motion.p>
+            <motion.button
                 type="submit"
+                v-bind="hoverProps()"
                 class="rounded-md bg-acid px-5 py-2 text-sm font-semibold text-canvas transition hover:brightness-95 disabled:opacity-60"
                 :disabled="form.processing"
             >
                 {{ isEditing ? 'Save changes' : 'Create plan' }}
-            </button>
+            </motion.button>
         </div>
     </form>
 </template>

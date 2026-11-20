@@ -1,7 +1,9 @@
 <script setup>
 import { computed } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
+import { AnimatePresence, motion } from 'motion-v';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { MOTION, enterProps, hoverProps } from '../../../utils/motion';
 
 const props = defineProps({
     plans: {
@@ -60,7 +62,14 @@ function destroy(plan) {
                         </td>
                     </tr>
 
-                    <tr v-for="plan in plans" :key="plan.id" class="hover:bg-canvas/60">
+                    <AnimatePresence>
+                    <motion.tr
+                        v-for="plan in plans"
+                        :key="plan.id"
+                        v-bind="enterProps()"
+                        :exit="MOTION.exit"
+                        class="hover:bg-canvas/60"
+                    >
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-3">
                                 <img
@@ -107,15 +116,17 @@ function destroy(plan) {
                             >
                                 Edit
                             </Link>
-                            <button
+                            <motion.button
                                 type="button"
+                                v-bind="hoverProps()"
                                 class="ml-4 text-sm text-zinc-500 transition hover:text-red-400"
                                 @click="destroy(plan)"
                             >
                                 Delete
-                            </button>
+                            </motion.button>
                         </td>
-                    </tr>
+                    </motion.tr>
+                    </AnimatePresence>
                 </tbody>
             </table>
         </div>
