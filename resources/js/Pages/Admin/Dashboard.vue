@@ -1,6 +1,10 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import CountUp from '@/Components/CountUp.vue';
+import LiveDot from '@/Components/LiveDot.vue';
+import { motion } from 'motion-v';
+import { staggerProps } from '../../utils/motion';
 
 const props = defineProps({
     stats: { type: Array, default: () => [] },

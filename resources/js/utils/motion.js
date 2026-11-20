@@ -36,3 +36,9 @@ export function enterProps(options = {}) {
         transition: { duration: MOTION.duration, ease: MOTION.ease, delay, ...transition },
     };
 }
+
+// Staggered entrance for lists/grids: v-bind on each child with its index.
+// Children animate in sequence 60ms apart.
+export function staggerProps(index, options = {}) {
+    return enterProps({ delay: 0.06 * index, ...options });
+}

@@ -110,7 +110,7 @@ const valueProps = [
                     </p>
                     <div class="mt-8 flex flex-wrap gap-3">
                         <Link
-                            href="/instances#pricing"
+                            href="/launch"
                             class="rounded-md bg-acid px-5 py-3 text-sm font-semibold text-canvas transition hover:brightness-95"
                         >
                             Launch instance
@@ -166,7 +166,7 @@ const valueProps = [
                         </p>
                     </div>
                     <Link
-                        href="/instances#pricing"
+                        href="/launch"
                         class="shrink-0 rounded-md bg-acid px-5 py-3 text-sm font-semibold text-canvas transition hover:brightness-95"
                     >
                         Get started

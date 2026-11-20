@@ -4,7 +4,9 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InstanceController as AdminInstanceController;
+use App\Http\Controllers\InstanceCatalogController;
 use App\Http\Controllers\InstanceController;
+use App\Http\Controllers\LaunchController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,4 +39,11 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::delete('/instances/{gpuModel}', [AdminInstanceController::class, 'destroy'])->name('instances.destroy');
 });
 
-Route::get('/instances', [InstanceController::class, 'index'])->name('instances.index');
+Route::get('/', fn () => redirect('/home'));
+Route::get('/home', [InstanceController::class, 'index'])->name('home.index');
+Route::get('/instances', fn () => redirect('/home'));
+Route::get('/launch', [LaunchController::class, 'create'])->name('launch.create');
+Route::post('/launch', [LaunchController::class, 'store'])->name('launch.store');
+Route::put('/launch/{instance}/stop', [LaunchController::class, 'stop'])->name('launch.stop');
+Route::delete('/launch/{instance}', [LaunchController::class, 'terminate'])->name('launch.terminate');
+Route::get('/catalog', [InstanceCatalogController::class, 'index'])->name('catalog.index');

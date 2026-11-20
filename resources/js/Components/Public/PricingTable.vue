@@ -148,7 +148,7 @@ function price(plan) {
                     Prices shown per GPU per hour. Billed by the second.
                 </p>
                 <Link
-                    href="/instances#pricing"
+                    href="/launch"
                     class="rounded-md bg-acid px-4 py-2 text-xs font-semibold text-canvas transition hover:brightness-95"
                 >
                     Launch instance
