@@ -29,6 +29,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/instances', [AdminInstanceController::class, 'index'])->name('instances.index');
     Route::get('/instances/create', [AdminInstanceController::class, 'create'])->name('instances.create');
     Route::post('/instances', [AdminInstanceController::class, 'store'])->name('instances.store');
+    Route::get('/instances/{gpuModel}/edit', [AdminInstanceController::class, 'edit'])->name('instances.edit');
+    Route::put('/instances/{gpuModel}', [AdminInstanceController::class, 'update'])->name('instances.update');
+    Route::delete('/instances/{gpuModel}', [AdminInstanceController::class, 'destroy'])->name('instances.destroy');
 });
 
 Route::get('/instances', [InstanceController::class, 'index'])->name('instances.index');
