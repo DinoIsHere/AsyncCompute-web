@@ -216,7 +216,7 @@ const team = [
                             </p>
                         </div>
                         <Link
-                            href="/instances#pricing"
+                            href="/launch"
                             class="shrink-0 rounded-md bg-acid px-5 py-3 text-sm font-semibold text-canvas transition hover:brightness-95"
                         >
                             Launch instance

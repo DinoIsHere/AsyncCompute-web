@@ -23,6 +23,11 @@ class DashboardSeeder extends Seeder
      */
     public function run()
     {
+        // Idempotent: clear previous demo data before re-seeding
+        foreach ([DailyRevenue::class, Job::class, Cluster::class, GpuNode::class, Customer::class] as $model) {
+            $model::query()->delete();
+        }
+
         $models = GpuModel::all()->keyBy('name');
 
         // ------------------------------------------------------------------
@@ -108,8 +113,14 @@ class DashboardSeeder extends Seeder
         ];
 
         foreach ($clusters as $cluster) {
-            Cluster::create($cluster + [
+            Cluster::create([
+                'name' => $cluster['name'],
+                'region' => $cluster['region'],
                 'gpu_model_id' => $models[$cluster['model']]->id,
+                'node_count' => $cluster['node_count'],
+                'gpu_total' => $cluster['gpu_total'],
+                'status' => $cluster['status'],
+                'utilization' => $cluster['utilization'],
             ]);
         }
 

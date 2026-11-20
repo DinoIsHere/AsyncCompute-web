@@ -5,17 +5,16 @@ import { Link } from '@inertiajs/vue3';
 const mobileOpen = ref(false);
 
 const navLinks = [
-    { label: 'Instances', href: '/instances' },
-    { label: 'Compare', href: '#' },
+    { label: 'Instances', href: '/catalog' },
     { label: 'About', href: '/about' },
-    { label: 'Launch instance', href: '/instances#pricing' },
+    { label: 'Launch instance', href: '/launch' },
 ];
 </script>
 
 <template>
     <header class="sticky top-0 z-50 border-b border-hairline bg-canvas/95 backdrop-blur">
         <div class="mx-auto flex max-w-7xl items-center gap-6 px-5 py-4 sm:px-8">
-            <Link href="/instances" class="flex items-center gap-3" aria-label="Asyncindo home">
+            <Link href="/" class="flex items-center gap-3" aria-label="Asyncindo home">
                 <span class="inline-block h-3 w-3 rotate-45 bg-acid" aria-hidden="true"></span>
                 <span class="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-100">
                     asyncindo
@@ -38,7 +37,7 @@ const navLinks = [
                     Log in
                 </Link>
                 <Link
-                    href="/instances#pricing"
+                    href="/launch"
                     class="rounded-md bg-acid px-4 py-2 text-sm font-semibold text-canvas transition hover:brightness-95"
                 >
                     Get started
@@ -101,7 +100,7 @@ const navLinks = [
                 Log in
             </Link>
             <Link
-                href="/instances#pricing"
+                href="/launch"
                 class="mt-3 block rounded-md bg-acid px-4 py-2 text-center text-sm font-semibold text-canvas transition hover:brightness-95"
                 @click="mobileOpen = false"
             >
