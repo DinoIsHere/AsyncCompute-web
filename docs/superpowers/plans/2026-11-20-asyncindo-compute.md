@@ -184,7 +184,7 @@ git commit -m "chore: scaffold Laravel 9 + Inertia/Vue/Tailwind toolchain"
 - Consumes: Task 1 toolchain; `Storage` facade; `asset()`.
 - Produces: `GpuModel` with `$fillable`, `$appends = ['image_url']`, cast `is_active => boolean`, `getImageUrlAttribute(): ?string` returning `Storage::url($path)` when `image_path` starts with `gpu-models/`, otherwise `asset($path)`, `null` when empty. Relation `offerings(): HasMany`.
 - Produces: `InstanceOffering` with `$fillable`, relation `gpuModel(): BelongsTo`.
-- Produces: `CreatesPlans::createPlan(array $overrides = []): GpuModel` test helper that creates a plan and, unless overridden, one `gpu_count=1` offering.
+- Produces: `CreatesPlans::createPlan(array $overrides = []): GpuModel` test helper that creates a plan (deriving `slug` with `Str::slug($name)` unless overridden) and, unless overridden, one `gpu_count=1` offering.
 - Produces: seeded admin `admin@asyncindo.test` / `password` and six plans named exactly `HGX B200`, `HGX H100`, `HGX A100 80GB`, `HGX A100 40GB`, `GH200`, `Tesla V100`, each with 2–4 offerings and a local SVG `image_path`.
 
 - [ ] **Step 1: Write the failing seeder/schema test**
@@ -211,7 +211,7 @@ public function test_seeder_creates_six_active_plans_with_related_offerings(): v
     $plan = GpuModel::where('name', 'HGX H100')->firstOrFail();
     $this->assertGreaterThanOrEqual(2, $plan->offerings()->count());
     $this->assertSame($plan->id, $plan->offerings()->first()->gpuModel->id);
-    $this->assertStringStartsWith('/images/gpu-models/', $plan->image_url);
+    $this->assertStringContainsString('/images/gpu-models/', $plan->image_url);
 }
 ```
 
