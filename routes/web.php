@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InstanceController as AdminInstanceController;
+use App\Http\Controllers\InstanceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,3 +30,5 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/instances/create', [AdminInstanceController::class, 'create'])->name('instances.create');
     Route::post('/instances', [AdminInstanceController::class, 'store'])->name('instances.store');
 });
+
+Route::get('/instances', [InstanceController::class, 'index'])->name('instances.index');
