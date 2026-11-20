@@ -7,6 +7,7 @@ const mobileOpen = ref(false);
 const navLinks = [
     { label: 'Instances', href: '/instances' },
     { label: 'Compare', href: '#' },
+    { label: 'About', href: '/about' },
     { label: 'Launch instance', href: '/instances#pricing' },
 ];
 </script>
