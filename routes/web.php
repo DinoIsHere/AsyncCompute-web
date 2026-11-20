@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\InstanceController as AdminInstanceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,4 +24,8 @@ Route::post('/admin/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/instances', [AdminInstanceController::class, 'index'])->name('instances.index');
+    Route::get('/instances/create', [AdminInstanceController::class, 'create'])->name('instances.create');
+    Route::post('/instances', [AdminInstanceController::class, 'store'])->name('instances.store');
 });
